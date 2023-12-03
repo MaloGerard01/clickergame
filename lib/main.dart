@@ -1,10 +1,11 @@
 import 'package:evalnatif/inventory.dart';
-import 'package:evalnatif/models/Ressource.dart';
+import 'package:evalnatif/models/Resource.dart';
 import 'package:evalnatif/recipes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'models/Item.dart';
+import 'models/Effect.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,6 +26,13 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void cost(index, quant) {
+    resources[index].quantity--;
+    // resources[index].quantity = resources[index].quantity - quant;
+
+    notifyListeners();
+  }
+
   void checkRequirements() {
     if (resources[1].quantity >= 1000 && resources[2].quantity >= 1000) {
       resources[3].requirementMet = true;
@@ -40,7 +48,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
         create: (context) => MyAppState(),
         child: MaterialApp(
-          title: 'Resource Management Game',
+          title: 'Click game',
           initialRoute: '/',
           routes: {
             '/': (context) => ResourcesPage(),
@@ -78,7 +86,7 @@ class _ResourcesPageState extends State<ResourcesPage> {
         ],
       ),
       body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
         ),
         itemCount: Provider.of<MyAppState>(context).resources.length,
@@ -89,7 +97,6 @@ class _ResourcesPageState extends State<ResourcesPage> {
               true) {
             return GestureDetector(
               onTap: () {
-                print("in tap");
                 Provider.of<MyAppState>(context, listen: false)
                     .checkRequirements();
                 Provider.of<MyAppState>(context, listen: false)

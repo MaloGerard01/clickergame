@@ -54,7 +54,33 @@ class RecipesPage extends StatelessWidget {
     var appState = Provider.of<MyAppState>(context, listen: false);
 
     Recipe recipe = recipes[recipeIndex];
-    Item item = Item(recipe.name, 1);
-    appState.inventory.add(item);
+    Item item = Item(recipe.name, 1, "tool");
+
+    if (appState.inventory.length == 0) {
+      appState.inventory.add(item);
+    } else {
+      for (var itemInv in appState.inventory) {
+        if (itemInv.name == item.name) {
+          print("added to existing item");
+          itemInv.quantity++;
+        } else {
+          appState.inventory.add(item);
+        }
+      }
+    }
+
+    recipe.cost.forEach((key, value) {
+      var index = 0;
+      for (var resource in appState.resources) {
+        index++;
+        if (resource.name == key) {
+          print(value);
+          appState.cost(index, value);
+          print(resource.quantity);
+        }
+      }
+    });
+
+    print(appState.inventory);
   }
 }
